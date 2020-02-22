@@ -18,15 +18,11 @@ import Json.Decode as Decode
 import Json.Decode.Pipeline exposing (optional, optionalAt, required, requiredAt)
 
 
-type alias Author =
-    { name : String
-    , url : String
-    }
-
 type alias Post =
     { id : Int
     , title : String
-    , author : Author
+    , authorName : String
+    , authorUrl : String
     }
 
 type alias Model =
@@ -71,7 +67,7 @@ viewPosts posts =
     div []
         [ h3 [] [ text "Posts" ]
         , table []
-            ([ viewTableHeader ] ++ List.map viewPost posts)
+            ( viewTableHeader :: List.map viewPost posts )
         ]
 
 
@@ -95,7 +91,7 @@ viewPost post =
         , td []
             [ text post.title ]
         , td []
-            [ a [ href post.author.url ] [ text post.author.name ] ]
+            [ a [ href post.authorUrl ] [ text post.authorName ] ]
         ]
 
 
@@ -103,19 +99,13 @@ type Msg
     = SendHttpRequest
     | DataReceived (Result Http.Error (List Post))
 
-
-authorDecoder : Decoder Author
-authorDecoder =
-    Decode.succeed Author
-        |> required "name" string
-        |> required "url" string
-
 postDecoder : Decoder Post
 postDecoder =
     Decode.succeed Post
         |> required "id" int
         |> required "title" string
-        |> required "author" authorDecoder
+        |> required "authorName" string
+        |> required "authorUrl" string
 
 
 httpCommand : Cmd Msg
