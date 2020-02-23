@@ -42,10 +42,11 @@ view : Model -> Html Msg
 view model =
     div []
         [ button [ onClick FetchPosts] 
+            [ text "Refresh Posts" ]
         , viewPosts model.posts
         ]
 
-viewPosts : List Post -> Html Msg
+viewPosts : WebData (List Post) -> Html Msg
 viewPosts posts =
     case posts of
         RemoteData.NotAsked ->
@@ -108,9 +109,3 @@ buildErrorMessage httpError =
         Http.BadBody message ->
             message
 
-
-    
-        option2 ->
-            
-    
-                    
