@@ -75,6 +75,10 @@ viewTableHeader =
 
 viewPost : Post -> Html Msg
 viewPost post =
+    let
+        postPath =
+            "/posts/" ++ Post.idToString post.id
+    in
     tr []
         [ td []
             [ text (Post.idToString post.id) ]
@@ -82,6 +86,8 @@ viewPost post =
             [ text post.title ]
         , td []
             [ a [ href post.authorUrl ] [ text post.authorName ] ]
+        , td []
+            [ a [ href postPath ] [ text "Edit" ] ]
         ]
 
 viewFetchError : String -> Html Msg
