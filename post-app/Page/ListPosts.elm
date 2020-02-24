@@ -16,8 +16,8 @@ type Msg
     = FetchPosts
     | PostsReceived (WebData (List Post))
 
-init : () -> ( Model, Cmd Msg )
-init _ =
+init : ( Model, Cmd Msg )
+init =
     ( { posts = RemoteData.Loading }, fetchPosts )
 
 fetchPosts : Cmd Msg
