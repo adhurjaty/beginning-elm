@@ -1,12 +1,14 @@
-module Page.EditPost exposing (Model)
+module Page.EditPost exposing (Model, Msg, init, update, view)
 
 import Browser.Navigation as Nav
+import Error exposing (buildErrorMessage)
 import Http
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick, onInput)
 import Post exposing (Post, PostId, postDecoder, postEncoder)
 import RemoteData exposing(WebData)
+import Route
 
 type alias Model =
     { navKey : Nav.Key
@@ -90,7 +92,7 @@ update msg model =
                     RemoteData.succeed postData
             in
             ( { model | post = post, saveError = Nothing }
-            , Cmd.none 
+            , Route.pushUrl Route.Posts model.navKey
             )
 
         PostSaved (Err error) ->
@@ -208,27 +210,4 @@ viewSaveError maybeError =
     
         Nothing ->
             text ""
-            
-    
-
-buildErrorMessage : Http.Error -> String
-buildErrorMessage httpError =
-    case httpError of
-        Http.BadUrl message ->
-            message
-    
-        Http.Timeout ->
-            "Server is taking too long to respond. Please try again later"
-
-        Http.NetworkError ->
-            "Unable to reach server."
-
-        Http.BadStatus statusCode ->
-            "Request failed with status code: " ++ String.fromInt statusCode
-
-        Http.BadBody message ->
-            message
-
-            
-    
             

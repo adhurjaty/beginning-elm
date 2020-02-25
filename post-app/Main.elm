@@ -3,6 +3,7 @@ module Main exposing (main)
 import Browser exposing (Document, UrlRequest)
 import Browser.Navigation as Nav
 import Html exposing (..)
+import Page.EditPost as EditPost
 import Page.ListPosts as ListPosts
 import Route exposing (Route)
 import Url exposing (Url)
@@ -33,6 +34,7 @@ type Msg
     = ListPageMsg ListPosts.Msg
     | LinkClicked UrlRequest
     | UrlChanged Url
+    | EditPageMsg EditPost.Msg
 
 init : () -> Url -> Nav.Key -> ( Model, Cmd Msg )
 init flags url navKey =
@@ -86,6 +88,10 @@ currentView model =
             ListPosts.view pageModel
                 |> Html.map ListPageMsg
 
+        EditPage pageModel ->
+            EditPost.view pageModel
+                |> Html.map EditPageMsg
+
 notFoundView : Html msg
 notFoundView =
     h3 [] [ text "Oops! The page you requested was not found!" ]
@@ -121,6 +127,16 @@ update msg model =
             in
             ( { model | route = newRoute }, Cmd.none )
                 |> initCurrentPage
+
+        ( EditPageMsg subMsg, EditPage pageModel ) ->
+            let
+                ( updatedPageModel, updatedCmd ) =
+                    EditPost.update subMsg pageModel
+            in
+            ( { model | page = EditPage updatedPageModel }
+            , Cmd.map EditPageMsg updatedCmd
+            )
+            
             
         (_, _) ->
              ( model, Cmd.none )
