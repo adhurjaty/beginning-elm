@@ -6,6 +6,8 @@ module Post exposing
     , postDecoder 
     , postsDecoder
     , postEncoder
+    , newPostEncoder
+    , emptyPostId
     )
 
 import Json.Decode as Decode exposing (Decoder, int, list, string)
@@ -58,6 +60,18 @@ postEncoder post =
         , ( "authorUrl", Encode.string post.authorUrl )
         ]
 
+newPostEncoder : Post -> Encode.Value
+newPostEncoder post =
+    Encode.object
+        [ ( "title", Encode.string post.title )
+        , ( "authorName", Encode.string post.authorName )
+        , ( "authorUrl", Encode.string post.authorUrl )
+        ]
+
 encodeId : PostId -> Encode.Value
 encodeId (PostId id) =
     Encode.int id
+
+emptyPostId : PostId
+emptyPostId =
+    PostId -1

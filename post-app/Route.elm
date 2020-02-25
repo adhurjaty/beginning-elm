@@ -9,6 +9,7 @@ type Route
     = NotFound
     | Posts
     | Post PostId
+    | NewPost
 
 parseUrl : Url -> Route
 parseUrl url =
@@ -24,6 +25,7 @@ matchRoute =
         [ map Posts top
         , map Posts (s "posts")
         , map Post (s "posts" </> Post.idParser)
+        , map NewPost (s "posts" </> s "new")
         ]
 
 pushUrl : Route -> Nav.Key -> Cmd msg
@@ -42,3 +44,6 @@ routeToString route =
 
         Post postId ->
             "/posts/" ++ Post.idToString postId
+
+        NewPost ->
+            "/posts/new"
